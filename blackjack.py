@@ -83,6 +83,36 @@ class Game:
             print("Dealer's hand is:")
             self.dealer_hand.display()
             
+            choice = input("Please choose [Hit / Stick] ").lower()
+            while choice not in ["h", "s", "hit", "stick"]:
+                choice = input("Please enter 'hit' or 'stick' (or H/S ").lower()
+                
+            if choice in ['hit', 'h']:
+                self.player_hand.add_card(self.deck.deal())
+                self.player_hand.display()
+                
+                if self.player_is_over():
+                    print("You have lost!")
+                    game_over = True
+            else:
+                player_hand_value = self.player_hand.get_value()
+                dealer_hand_value = self.dealer_hand.get_value()
+                
+                print("Final Results")
+                print("Your hand:", player_hand_value)
+                print("Dealer's hand:", dealer_hand_value)
+                
+                if player_hand_value > dealer_hand_value:
+                    print("You Win!")
+                elif player_hand_value == dealer_hand_value:
+                    print("Tie!")
+                else:
+                    print("Dealer Wins!")
+                game_over = True
+                
+            def player_is_over(self):
+                return self.player_hand.get_value() > 21
+            
         game_over = False
         
         def check_for_blackjack(self):
@@ -107,3 +137,16 @@ class Game:
                 game_over = True
                 self.show_blackjack_results(player_has_blackjack, dealer_has_blackjack)
                 continue
+            
+        again = input("Play Again? [Y/N] ")
+        while again.lower() not in ["y", "n"]:
+            again = input("Please enter Y or N ")
+        if again.lower() == "n":
+            print("Thanks for playing!")
+            playing = False
+        else:
+            game_over = False
+    
+    if __name__ == "__main__":
+        game = Game()
+        game.play()
