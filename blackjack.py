@@ -1,5 +1,4 @@
 import random
-from builtins import False
 
 class Card:
     def __init__(self, suit, value):
@@ -83,6 +82,16 @@ class Game:
             print("Dealer's hand is:")
             self.dealer_hand.display()
             
+            game_over = False
+            
+            while not game_over:
+                player_has_blackjack = self.check_for_blackjack()
+                dealer_has_blackjack = self.check_for_blackjack()
+                if player_has_blackjack or dealer_has_blackjack:
+                    game_over = True
+                    self.show_blackjack_results(player_has_blackjack, dealer_has_blackjack)
+                    continue
+            
             choice = input("Please choose [Hit / Stick] ").lower()
             while choice not in ["h", "s", "hit", "stick"]:
                 choice = input("Please enter 'hit' or 'stick' (or H/S ").lower()
@@ -90,7 +99,6 @@ class Game:
             if choice in ['hit', 'h']:
                 self.player_hand.add_card(self.deck.deal())
                 self.player_hand.display()
-                
                 if self.player_is_over():
                     print("You have lost!")
                     game_over = True
@@ -110,34 +118,6 @@ class Game:
                     print("Dealer Wins!")
                 game_over = True
                 
-            def player_is_over(self):
-                return self.player_hand.get_value() > 21
-            
-        game_over = False
-        
-        def check_for_blackjack(self):
-            player = False
-            dealer = False
-            if self.player_hand.get_value() == 21:
-                player = True
-            if self.dealer_hand.get_value() == 21:
-                dealer = True
-        
-        def show_blackjack_results(self, player_has_blackjack, dealer_has_blackjack):
-            if player_has_blackjack and dealer_has_blackjack:
-                print("Both players have blackjack! Draw!")
-            elif player_has_blackjack:
-                print("You have blackjack! You win!")
-            elif dealer_has_blackjack:
-                print("Dealer has blackjack! Dealer wins!")
-                        
-        while not game_over:
-            player_has_blackjack, dealer_has_blackjack = self.check_for_blackjack()
-            if player_has_blackjack or dealer_has_blackjack:
-                game_over = True
-                self.show_blackjack_results(player_has_blackjack, dealer_has_blackjack)
-                continue
-            
         again = input("Play Again? [Y/N] ")
         while again.lower() not in ["y", "n"]:
             again = input("Please enter Y or N ")
@@ -146,7 +126,26 @@ class Game:
             playing = False
         else:
             game_over = False
+                
+    def player_is_over(self):
+        return self.player_hand.get_value() > 21
+        
+    def check_for_blackjack(self):
+        player_has_blackjack = False
+        dealer_has_blackjack = False
+        if self.player_hand.get_value() == 21:
+            player_has_blackjack = True
+        if self.dealer_hand.get_value() == 21:
+            dealer_has_blackjack = True
+                
+    def show_blackjack_results(self, player_has_blackjack, dealer_has_blackjack):
+        if player_has_blackjack and dealer_has_blackjack:
+            print("Both players have blackjack! Draw!")
+        elif player_has_blackjack:
+            print("You have blackjack! You win!")
+        elif dealer_has_blackjack:
+            print("Dealer has blackjack! Dealer wins!")
     
-    if __name__ == "__main__":
-        game = Game()
-        game.play()
+if __name__ == "__main__":
+    game = Game()
+    game.play()
